@@ -1,0 +1,29 @@
+2025-04-16 01:13:02,715 - review-classifier-pro - INFO - 강화된 데이터 생성 시작: 5000개
+2025-04-16 01:13:02,716 - data-generator - INFO - 강화된 학습 데이터 생성 시작: 5000개 샘플
+2025-04-16 01:13:03,047 - data-generator - INFO - 강화된 학습 데이터 생성 완료:
+2025-04-16 01:13:03,047 - data-generator - INFO - - 총 샘플 수: 5000
+2025-04-16 01:13:03,048 - data-generator - INFO - - 정상 리뷰: 3500개 (70.0%)
+2025-04-16 01:13:03,048 - data-generator - INFO - - 비정상 리뷰: 1500개 (30.0%)
+2025-04-16 01:13:03,049 - data-generator - INFO - - 저장 위치: data/enhanced_dataset.csv
+2025-04-16 01:13:46,553 - review-classifier-pro - INFO - 모델 훈련 시작: data/enhanced_dataset.csv
+2025-04-16 01:13:46,553 - train - INFO - 훈련 장치: cpu
+2025-04-16 01:13:46,595 - train - INFO - 데이터 로드: 5000개 샘플
+2025-04-16 01:14:00,321 - review-classifier-pro - INFO - 강화된 데이터 생성 시작: 5000개
+2025-04-16 01:14:00,322 - data-generator - INFO - 강화된 학습 데이터 생성 시작: 5000개 샘플
+2025-04-16 01:14:00,620 - data-generator - INFO - 강화된 학습 데이터 생성 완료:
+2025-04-16 01:14:00,621 - data-generator - INFO - - 총 샘플 수: 5000
+2025-04-16 01:14:00,621 - data-generator - INFO - - 정상 리뷰: 3500개 (70.0%)
+2025-04-16 01:14:00,621 - data-generator - INFO - - 비정상 리뷰: 1500개 (30.0%)
+2025-04-16 01:14:00,622 - data-generator - INFO - - 저장 위치: data/enhanced_dataset.csv
+2025-04-16 01:14:01,369 - review-classifier-pro - INFO - 강화된 데이터 생성 시작: 5000개
+2025-04-16 01:14:01,369 - data-generator - INFO - 강화된 학습 데이터 생성 시작: 5000개 샘플
+2025-04-16 01:14:01,741 - data-generator - INFO - 강화된 학습 데이터 생성 완료:
+2025-04-16 01:14:01,742 - data-generator - INFO - - 총 샘플 수: 5000
+2025-04-16 01:14:01,742 - data-generator - INFO - - 정상 리뷰: 3500개 (70.0%)
+2025-04-16 01:14:01,742 - data-generator - INFO - - 비정상 리뷰: 1500개 (30.0%)
+2025-04-16 01:14:01,743 - data-generator - INFO - - 저장 위치: data/enhanced_dataset.csv
+2025-04-16 01:14:11,365 - review-classifier-pro - INFO - 모델 훈련 시작: data/enhanced_dataset.csv
+2025-04-16 01:14:11,365 - train - INFO - 훈련 장치: cpu
+2025-04-16 01:14:11,399 - train - INFO - 데이터 로드: 5000개 샘플
+2025-04-16 01:14:12,206 - train - INFO - 레이블 분포: 정상=3500개 (70.0%), 비정상=1500개 (30.0%)
+2025-04-16 01:14:12,210 - train - INFO - 데이터 분할: 훈련=4000개, 검증=500개, 테스트=500개
