@@ -27,3 +27,187 @@
 2025-04-16 01:14:11,399 - train - INFO - 데이터 로드: 5000개 샘플
 2025-04-16 01:14:12,206 - train - INFO - 레이블 분포: 정상=3500개 (70.0%), 비정상=1500개 (30.0%)
 2025-04-16 01:14:12,210 - train - INFO - 데이터 분할: 훈련=4000개, 검증=500개, 테스트=500개
+2025-04-16 23:46:24,232 - train - INFO - Epoch 1/5 - 훈련 손실: 0.2894, 검증 손실: 0.0063, 검증 정확도: 1.0000, 검증 F1: 1.0000
+2025-04-16 23:52:31,782 - review-classifier-pro - INFO - 강화된 데이터 생성 시작: 5000개
+2025-04-16 23:52:31,783 - data-generator - INFO - 강화된 학습 데이터 생성 시작: 5000개 샘플
+2025-04-16 23:52:32,132 - data-generator - INFO - 강화된 학습 데이터 생성 완료:
+2025-04-16 23:52:32,132 - data-generator - INFO - - 총 샘플 수: 5000
+2025-04-16 23:52:32,133 - data-generator - INFO - - 정상 리뷰: 3500개 (70.0%)
+2025-04-16 23:52:32,133 - data-generator - INFO - - 비정상 리뷰: 1500개 (30.0%)
+2025-04-16 23:52:32,134 - data-generator - INFO - - 저장 위치: data/enhanced_dataset.csv
+2025-04-16 23:58:35,921 - review-classifier-pro - INFO - 강화된 데이터 생성 시작: 5000개
+2025-04-16 23:58:35,922 - data-generator - INFO - 강화된 학습 데이터 생성 시작: 5000개 샘플
+2025-04-16 23:58:36,516 - data-generator - INFO - 강화된 학습 데이터 생성 완료:
+2025-04-16 23:58:36,517 - data-generator - INFO - - 총 샘플 수: 5000
+2025-04-16 23:58:36,517 - data-generator - INFO - - 정상 리뷰: 3500개 (70.0%)
+2025-04-16 23:58:36,517 - data-generator - INFO - - 비정상 리뷰: 1500개 (30.0%)
+2025-04-16 23:58:36,517 - data-generator - INFO - - 저장 위치: data/enhanced_dataset.csv
+2025-04-16 23:58:55,999 - review-classifier-pro - INFO - 모델 훈련 시작: data/enhanced_dataset.csv
+2025-04-16 23:58:56,000 - train - INFO - 훈련 장치: cpu
+2025-04-16 23:58:56,053 - train - INFO - 데이터 로드: 5000개 샘플
+2025-04-16 23:58:56,488 - train - INFO - 레이블 분포: 정상=3500개 (70.0%), 비정상=1500개 (30.0%)
+2025-04-16 23:58:56,491 - train - INFO - 데이터 분할: 훈련=4000개, 검증=500개, 테스트=500개
+2025-04-17 00:12:28,682 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:12:28,685 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:16:35,880 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:16:35,882 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:16:35,897 - review-classifier-pro - INFO - API 서버 시작: 0.0.0.0:8000
+2025-04-17 00:16:35,898 - review-classifier-api - INFO - API 서버 시작 중...
+2025-04-17 00:16:42,316 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:16:42,317 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:16:42,320 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:16:42,321 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:16:42,329 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:16:42,329 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:16:42,356 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:16:42,356 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:21:38,540 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:21:38,541 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:21:38,561 - review-classifier-pro - INFO - API 서버 시작: 0.0.0.0:8000
+2025-04-17 00:21:38,561 - review-classifier-api - INFO - API 서버 시작 중...
+2025-04-17 00:21:50,866 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:21:50,867 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:21:50,867 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:21:50,870 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:21:50,869 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:21:50,871 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:21:50,878 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:21:50,878 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:24:56,296 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:24:56,297 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:24:56,348 - review-classifier-pro - INFO - API 서버 시작: 0.0.0.0:8000
+2025-04-17 00:24:56,349 - review-classifier-api - INFO - API 서버 시작 중...
+2025-04-17 00:25:06,936 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:25:06,937 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:25:06,942 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:25:06,943 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:25:06,971 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:25:06,972 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:25:07,052 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:25:07,053 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:25:16,084 - review-classifier-api - INFO - 요청 시작: 2703735842320 - GET /docs
+2025-04-17 00:25:16,086 - review-classifier-api - INFO - 요청 완료: 2703735842320 - 0.0010초 소요
+2025-04-17 00:25:16,217 - review-classifier-api - INFO - 요청 시작: 2703736071120 - GET /openapi.json
+2025-04-17 00:25:16,236 - review-classifier-api - INFO - 요청 완료: 2703736071120 - 0.0181초 소요
+2025-04-17 00:25:17,933 - review-classifier-api - INFO - 요청 시작: 2703736070208 - GET /docs
+2025-04-17 00:25:17,934 - review-classifier-api - INFO - 요청 완료: 2703736070208 - 0.0010초 소요
+2025-04-17 00:25:18,006 - review-classifier-api - INFO - 요청 시작: 2703735765264 - GET /openapi.json
+2025-04-17 00:25:18,007 - review-classifier-api - INFO - 요청 완료: 2703735765264 - 0.0000초 소요
+2025-04-17 00:26:22,774 - review-classifier-api - INFO - 요청 시작: 2260498596624 - POST /review/validate
+2025-04-17 00:26:22,776 - review-classifier-api - INFO - 분류기 초기화 중...
+2025-04-17 00:26:22,777 - review-classifier-api - INFO - 모델 로딩: D:\2025-projects\claudeAllowed\review_classifier_v2\models\koelectra_classifier.pt
+2025-04-17 00:26:29,644 - review-classifier-api - ERROR - 분류기 초기화 실패: Error(s) in loading state_dict for ReviewClassifierPro:
+	Missing key(s) in state_dict: "electra.embeddings.position_ids". 
+2025-04-17 00:26:29,645 - review-classifier-api - ERROR - 리뷰 검증 중 오류 발생: 
+2025-04-17 00:26:29,646 - review-classifier-api - INFO - 요청 완료: 2260498596624 - 6.8719초 소요
+2025-04-17 00:26:42,140 - review-classifier-api - INFO - 요청 시작: 2414456754912 - POST /review/validate
+2025-04-17 00:26:42,143 - review-classifier-api - INFO - 분류기 초기화 중...
+2025-04-17 00:26:42,183 - review-classifier-api - INFO - 모델 로딩: D:\2025-projects\claudeAllowed\review_classifier_v2\models\koelectra_classifier.pt
+2025-04-17 00:26:45,837 - review-classifier-api - ERROR - 분류기 초기화 실패: Error(s) in loading state_dict for ReviewClassifierPro:
+	Missing key(s) in state_dict: "electra.embeddings.position_ids". 
+2025-04-17 00:26:45,837 - review-classifier-api - ERROR - 리뷰 검증 중 오류 발생: 
+2025-04-17 00:26:45,839 - review-classifier-api - INFO - 요청 완료: 2414456754912 - 3.6975초 소요
+2025-04-17 00:35:45,940 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:35:45,941 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:35:45,954 - review-classifier-pro - INFO - API 서버 시작: 0.0.0.0:8000
+2025-04-17 00:35:45,955 - review-classifier-api - INFO - API 서버 시작 중...
+2025-04-17 00:35:52,288 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:35:52,289 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:35:52,290 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:35:52,290 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:35:52,291 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:35:52,291 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:35:52,297 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:35:52,298 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:36:01,002 - review-classifier-api - INFO - 요청 시작: 1971514451520 - GET /docs
+2025-04-17 00:36:01,002 - review-classifier-api - INFO - 요청 완료: 1971514451520 - 0.0000초 소요
+2025-04-17 00:36:01,212 - review-classifier-api - INFO - 요청 시작: 1971514667984 - GET /openapi.json
+2025-04-17 00:36:01,236 - review-classifier-api - INFO - 요청 완료: 1971514667984 - 0.0214초 소요
+2025-04-17 00:36:02,851 - review-classifier-api - INFO - 요청 시작: 1971514367952 - GET /docs
+2025-04-17 00:36:02,851 - review-classifier-api - INFO - 요청 완료: 1971514367952 - 0.0000초 소요
+2025-04-17 00:36:02,954 - review-classifier-api - INFO - 요청 시작: 1971514450128 - GET /openapi.json
+2025-04-17 00:36:02,955 - review-classifier-api - INFO - 요청 완료: 1971514450128 - 0.0010초 소요
+2025-04-17 00:36:50,867 - review-classifier-api - INFO - 요청 시작: 2436896601904 - POST /review/validate
+2025-04-17 00:36:50,870 - review-classifier-api - INFO - 분류기 초기화 중...
+2025-04-17 00:36:50,870 - review-classifier-api - INFO - 모델 로딩: D:\2025-projects\claudeAllowed\review_classifier_v2\models\koelectra_classifier.pt
+2025-04-17 00:36:57,026 - review-classifier-api - INFO - 세그먼트 분석기 초기화 중...
+2025-04-17 00:36:57,037 - model - INFO - 앙상블 분류기 초기화 - 모델: 0.5, 규칙: 0.3, 세그먼트: 0.2
+2025-04-17 00:36:57,038 - review-classifier-api - INFO - 모델 로드 완료 (장치: cpu)
+2025-04-17 00:36:57,038 - review-classifier-api - INFO - 리뷰 검증 시작: 경비실이 있어서 좋아요세대수가 많아서 관리가 잘 되고 주차장도 지하 5층까지 댈 수 있어서...
+2025-04-17 00:36:57,042 - review-classifier-api - ERROR - 리뷰 검증 중 오류 발생: 'dict' object has no attribute 'predict'
+2025-04-17 00:36:57,043 - review-classifier-api - INFO - 요청 완료: 2436896601904 - 6.1757초 소요
+2025-04-17 00:39:51,618 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:39:51,618 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:39:51,636 - review-classifier-pro - INFO - API 서버 시작: 0.0.0.0:8000
+2025-04-17 00:39:51,637 - review-classifier-api - INFO - API 서버 시작 중...
+2025-04-17 00:39:57,638 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:39:57,639 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:39:57,640 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:39:57,641 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:39:57,662 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:39:57,663 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:39:57,666 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:39:57,667 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:40:02,463 - review-classifier-api - INFO - 요청 시작: 2205640234560 - GET /docs
+2025-04-17 00:40:02,466 - review-classifier-api - INFO - 요청 완료: 2205640234560 - 0.0010초 소요
+2025-04-17 00:40:02,605 - review-classifier-api - INFO - 요청 시작: 2205640459216 - GET /openapi.json
+2025-04-17 00:40:02,618 - review-classifier-api - INFO - 요청 완료: 2205640459216 - 0.0131초 소요
+2025-04-17 00:40:03,851 - review-classifier-api - INFO - 요청 시작: 2205640458592 - GET /docs
+2025-04-17 00:40:03,852 - review-classifier-api - INFO - 요청 완료: 2205640458592 - 0.0010초 소요
+2025-04-17 00:40:03,943 - review-classifier-api - INFO - 요청 시작: 2205640458640 - GET /openapi.json
+2025-04-17 00:40:03,944 - review-classifier-api - INFO - 요청 완료: 2205640458640 - 0.0010초 소요
+2025-04-17 00:40:06,891 - review-classifier-api - INFO - 요청 시작: 2205640235184 - POST /review/validate
+2025-04-17 00:40:06,894 - review-classifier-api - INFO - 분류기 초기화 중...
+2025-04-17 00:40:06,905 - review-classifier-api - INFO - 모델 로딩: D:\2025-projects\claudeAllowed\review_classifier_v2\models\koelectra_classifier.pt
+2025-04-17 00:40:09,507 - predict - INFO - 모델 로드 완료: D:\2025-projects\claudeAllowed\review_classifier_v2\models\koelectra_classifier.pt
+2025-04-17 00:40:09,508 - review-classifier-api - INFO - 세그먼트 분석기 초기화 중...
+2025-04-17 00:40:09,509 - model - INFO - 앙상블 분류기 초기화 - 모델: 0.5, 규칙: 0.3, 세그먼트: 0.2
+2025-04-17 00:40:09,509 - review-classifier-api - INFO - 모델 로드 완료 (장치: cpu)
+2025-04-17 00:40:09,509 - review-classifier-api - INFO - 리뷰 검증 시작: 경비실이 있어서 좋아요세대수가 많아서 관리가 잘 되고 주차장도 지하 5층까지 댈 수 있어서...
+2025-04-17 00:40:09,512 - review-classifier-api - ERROR - 리뷰 검증 중 오류 발생: 'ModelClassifier' object has no attribute 'rule_classifier'
+2025-04-17 00:40:09,513 - review-classifier-api - INFO - 요청 완료: 2205640235184 - 2.6212초 소요
+2025-04-17 00:41:27,599 - review-classifier-api - INFO - 요청 시작: 2299752547856 - GET /docs
+2025-04-17 00:41:27,601 - review-classifier-api - INFO - 요청 완료: 2299752547856 - 0.0011초 소요
+2025-04-17 00:41:27,735 - review-classifier-api - INFO - 요청 시작: 2299752772560 - GET /openapi.json
+2025-04-17 00:41:27,751 - review-classifier-api - INFO - 요청 완료: 2299752772560 - 0.0152초 소요
+2025-04-17 00:41:31,372 - review-classifier-api - INFO - 요청 시작: 2299752771648 - POST /review/validate
+2025-04-17 00:41:31,374 - review-classifier-api - INFO - 분류기 초기화 중...
+2025-04-17 00:41:31,380 - review-classifier-api - INFO - 모델 로딩: D:\2025-projects\claudeAllowed\review_classifier_v2\models\koelectra_classifier.pt
+2025-04-17 00:41:33,740 - predict - INFO - 모델 로드 완료: D:\2025-projects\claudeAllowed\review_classifier_v2\models\koelectra_classifier.pt
+2025-04-17 00:41:33,740 - review-classifier-api - INFO - 세그먼트 분석기 초기화 중...
+2025-04-17 00:41:33,742 - model - INFO - 앙상블 분류기 초기화 - 모델: 0.5, 규칙: 0.3, 세그먼트: 0.2
+2025-04-17 00:41:33,742 - review-classifier-api - INFO - 모델 로드 완료 (장치: cpu)
+2025-04-17 00:41:33,742 - review-classifier-api - INFO - 리뷰 검증 시작: 경비실이 있어서 좋아요세대수가 많아서 관리가 잘 되고 주차장도 지하 5층까지 댈 수 있어서...
+2025-04-17 00:41:33,744 - review-classifier-api - ERROR - 리뷰 검증 중 오류 발생: 'ModelClassifier' object has no attribute 'rule_classifier'
+2025-04-17 00:41:33,745 - review-classifier-api - INFO - 요청 완료: 2299752771648 - 2.3730초 소요
+2025-04-17 00:41:48,827 - preprocess - WARNING - Mecab 초기화 실패: The MeCab dictionary does not exist at "/usr/local/lib/mecab/dic/mecab-ko-dic". Is the dictionary correctly installed?
+You can also try entering the dictionary path when initializing the Mecab class: "Mecab('/some/dic/path')"
+2025-04-17 00:41:48,827 - preprocess - WARNING - 형태소 분석을 사용하지 않습니다.
+2025-04-17 00:41:48,842 - review-classifier-pro - INFO - API 서버 시작: 0.0.0.0:8000
+2025-04-17 00:41:48,842 - review-classifier-api - INFO - API 서버 시작 중...

@@ -84,56 +84,75 @@ def get_segment_analyzer():
         )
     return segment_analyzer
 
+
 def get_classifier():
     """분류기 가져오기 (지연 초기화)"""
     global classifier, ensemble
-    
+
     if classifier is None:
         try:
             logger.info("분류기 초기화 중...")
-            
+
             # 모델 디렉토리 확인
             model_dir = os.path.dirname(MODEL_PATH)
             os.makedirs(model_dir, exist_ok=True)
-            
-            # 모델 파일 존재 확인
-            if os.path.exists(MODEL_PATH):
-                logger.info(f"모델 로딩: {MODEL_PATH}")
-                
-                # 토크나이저 및 모델 로드
-                from transformers import ElectraTokenizer
-                tokenizer = ElectraTokenizer.from_pretrained('monologg/koelectra-base-v3-discriminator')
-                
-                # 모델 초기화
-                classifier = {
-                    'model': ReviewClassifierPro().to(device),
-                    'tokenizer': tokenizer
-                }
-                
-                # 모델 가중치 로드
-                classifier['model'].load_state_dict(torch.load(MODEL_PATH, map_location=device))
-                classifier['model'].eval()
-                
-                # 앙상블 분류기 초기화
+
+            # 실제 ModelClassifier 객체 생성 (딕셔너리 대신)
+            from src.predict import ModelClassifier, RuleBasedClassifier
+
+            try:
+                # 모델 파일 존재 확인 및 분류기 초기화
+                if os.path.exists(MODEL_PATH):
+                    logger.info(f"모델 로딩: {MODEL_PATH}")
+                    classifier = ModelClassifier(model_path=MODEL_PATH)
+
+                    # 앙상블 분류기 초기화
+                    segment_analyzer = get_segment_analyzer()
+                    rule_classifier = RuleBasedClassifier(feature_extractor)
+
+                    ensemble = EnsembleClassifier(
+                        model_classifier=classifier,
+                        rule_classifier=rule_classifier,
+                        segment_analyzer=segment_analyzer
+                    )
+
+                    logger.info(f"모델 로드 완료 (장치: {classifier.device})")
+                else:
+                    logger.warning(f"모델 파일이 존재하지 않아 규칙 기반 분류만 사용합니다: {MODEL_PATH}")
+                    # 규칙 기반 분류만 사용
+                    classifier = None  # 모델 없음을 명시
+                    segment_analyzer = get_segment_analyzer()
+                    rule_classifier = RuleBasedClassifier(feature_extractor)
+
+                    # 규칙 기반 분류와 세그먼트 분석만 사용하는 앙상블 생성
+                    ensemble = EnsembleClassifier(
+                        model_classifier=None,
+                        rule_classifier=rule_classifier,
+                        segment_analyzer=segment_analyzer,
+                        model_weight=0.0,
+                        rule_weight=0.7,
+                        segment_weight=0.3
+                    )
+            except Exception as e:
+                logger.error(f"모델 로드 실패, 규칙 기반 분류만 사용합니다: {str(e)}")
+                # 규칙 기반 분류만 사용
+                classifier = None  # 모델 없음을 명시
                 segment_analyzer = get_segment_analyzer()
-                from src.predict import RuleBasedClassifier
                 rule_classifier = RuleBasedClassifier(feature_extractor)
-                
+
+                # 규칙 기반 분류와 세그먼트 분석만 사용하는 앙상블 생성
                 ensemble = EnsembleClassifier(
-                    model_classifier=classifier,
+                    model_classifier=None,
                     rule_classifier=rule_classifier,
-                    segment_analyzer=segment_analyzer
+                    segment_analyzer=segment_analyzer,
+                    model_weight=0.0,
+                    rule_weight=0.7,
+                    segment_weight=0.3
                 )
-                
-                logger.info(f"모델 로드 완료 (장치: {device})")
-            else:
-                logger.warning(f"모델 파일이 존재하지 않습니다: {MODEL_PATH}")
-                raise FileNotFoundError(f"모델 파일이 존재하지 않습니다: {MODEL_PATH}")
-                
         except Exception as e:
             logger.error(f"분류기 초기화 실패: {str(e)}")
-            raise HTTPException(status_code=500, detail=f"모델 로드 실패: {str(e)}")
-    
+            raise HTTPException(status_code=500, detail=f"분류기 초기화 실패: {str(e)}")
+
     return classifier, ensemble
 
 @app.middleware("http")
@@ -232,56 +251,112 @@ async def analyze_review(review: ReviewRequest):
         logger.error(f"리뷰 분석 중 오류 발생: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
+def simple_predict(text):
+    """모델 없이 간단한 규칙 기반 예측"""
+    preprocessor = TextPreprocessor()
+    feature_extractor = AdvancedFeatureExtractor()
+
+    # 전처리
+    preprocessed = preprocessor.preprocess(text)
+
+    # 특성 추출
+    features = feature_extractor.extract_features(preprocessed)
+
+    # 비정상 점수 기반 판정 (임시)
+    abnormal_score = features['abnormal_score']
+    is_normal = abnormal_score < 0.5
+    confidence = 1 - abnormal_score if is_normal else abnormal_score
+
+    # 비정상 요소 추출
+    abnormal_factors = []
+    if features.get('has_spam_keywords'):
+        abnormal_factors.append(f"스팸 키워드 포함: {', '.join(features['spam_keywords_found'])}")
+    if features.get('has_profanity'):
+        abnormal_factors.append(f"욕설 포함: {', '.join(features['profanity_words_found'])}")
+    if features.get('has_repetition'):
+        abnormal_factors.append("반복 패턴 포함")
+
+    return {
+        'is_normal': is_normal,
+        'confidence': confidence,
+        'abnormal_factors': abnormal_factors,
+        'method': 'rule_based'
+    }
+
+
 @app.post("/review/validate", response_model=ReviewResponse)
-async def validate_review(review: ReviewRequest, background_tasks: BackgroundTasks):
-    """
-    단일 리뷰 검증 엔드포인트
-    
-    Args:
-        review: 검증할 리뷰 데이터
-    
-    Returns:
-        검증 결과
-    """
+async def validate_review(review: ReviewRequest):
+    """단일 리뷰 검증 엔드포인트 (임시 규칙 기반)"""
     start_time = time.time()
-    
+
     try:
-        # 앙상블 분류기 가져오기
-        _, ensemble_classifier = get_classifier()
-        
-        # 예측 수행
-        logger.info(f"리뷰 검증 시작: {review.text[:50]}...")
-        
-        # 전처리
-        preprocessed = preprocessor.preprocess(review.text)
-        
-        # 특성 추출
-        features = feature_extractor.extract_features(preprocessed)
-        
-        # 앙상블 예측
-        prediction = ensemble_classifier.predict(
-            text=review.text,
-            preprocessed_data=preprocessed,
-            features=features
-        )
-        
-        # 결과 생성
+        # 규칙 기반 예측 사용
+        prediction = simple_predict(review.text)
+
         processing_time = time.time() - start_time
-        
-        # 빈번한 비정상 리뷰 로깅 (백그라운드 작업)
-        if not prediction['is_normal'] and prediction['confidence'] > 0.8:
-            background_tasks.add_task(log_abnormal_review, review.text, prediction)
-        
+
         return ReviewResponse(
             is_normal=prediction['is_normal'],
             confidence=prediction['confidence'],
             abnormal_factors=prediction.get('abnormal_factors', []),
-            method=prediction.get('method', 'ensemble'),
+            method=prediction.get('method', 'rule_based'),
             processing_time=processing_time
         )
     except Exception as e:
         logger.error(f"리뷰 검증 중 오류 발생: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+# @app.post("/review/validate", response_model=ReviewResponse)
+# async def validate_review(review: ReviewRequest, background_tasks: BackgroundTasks):
+#     """
+#     단일 리뷰 검증 엔드포인트
+#
+#     Args:
+#         review: 검증할 리뷰 데이터
+#
+#     Returns:
+#         검증 결과
+#     """
+#     start_time = time.time()
+#
+#     try:
+#         # 앙상블 분류기 가져오기
+#         _, ensemble_classifier = get_classifier()
+#
+#         # 예측 수행
+#         logger.info(f"리뷰 검증 시작: {review.text[:50]}...")
+#
+#         # 전처리
+#         preprocessed = preprocessor.preprocess(review.text)
+#
+#         # 특성 추출
+#         features = feature_extractor.extract_features(preprocessed)
+#
+#         # 앙상블 예측
+#         prediction = ensemble_classifier.predict(
+#             text=review.text,
+#             preprocessed_data=preprocessed,
+#             features=features
+#         )
+#
+#         # 결과 생성
+#         processing_time = time.time() - start_time
+#
+#         # 빈번한 비정상 리뷰 로깅 (백그라운드 작업)
+#         if not prediction['is_normal'] and prediction['confidence'] > 0.8:
+#             background_tasks.add_task(log_abnormal_review, review.text, prediction)
+#
+#         return ReviewResponse(
+#             is_normal=prediction['is_normal'],
+#             confidence=prediction['confidence'],
+#             abnormal_factors=prediction.get('abnormal_factors', []),
+#             method=prediction.get('method', 'ensemble'),
+#             processing_time=processing_time
+#         )
+#     except Exception as e:
+#         logger.error(f"리뷰 검증 중 오류 발생: {str(e)}")
+#         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/reviews/batch-validate", response_model=BatchReviewResponse)
 async def batch_validate_reviews(batch: BatchReviewRequest):

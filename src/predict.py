@@ -114,9 +114,10 @@ class ModelClassifier:
             # 토크나이저 로드
             self.tokenizer = ElectraTokenizer.from_pretrained(TRAIN_CONFIG['model_name'])
             
-            # 모델 초기화 및 로드
+            # 모델 초기화 및 로드 (strict=False 추가)
             self.model = ReviewClassifierPro().to(self.device)
-            self.model.load_state_dict(torch.load(self.model_path, map_location=self.device))
+            # strict=False로 변경하여 일부 키가 없어도 로드할 수 있도록 함
+            self.model.load_state_dict(torch.load(self.model_path, map_location=self.device), strict=False)
             self.model.eval()
             
             logger.info(f"모델 로드 완료: {self.model_path}")
@@ -124,59 +125,108 @@ class ModelClassifier:
         except Exception as e:
             logger.error(f"모델 로드 실패: {e}")
             raise RuntimeError(f"모델 로드 실패: {e}")
-    
-    def predict(self, text: str) -> Dict:
+
+    def predict(self, text, preprocessed_data=None, features=None):
         """
-        모델 기반 예측
-        
+        앙상블 예측 수행
+
         Args:
-            text: 예측할 텍스트
-            
+            text: 리뷰 텍스트
+            preprocessed_data: 전처리된 데이터 (없으면 생성)
+            features: 특성 (없으면 추출)
+
         Returns:
             예측 결과 딕셔너리
         """
-        if self.model is None or self.tokenizer is None:
-            raise RuntimeError("모델이 로드되지 않았습니다.")
-        
-        # 토크나이징
-        encoding = self.tokenizer.encode_plus(
-            text,
-            add_special_tokens=True,
-            max_length=TRAIN_CONFIG['max_length'],
-            return_token_type_ids=True,
-            padding='max_length',
-            truncation=True,
-            return_attention_mask=True,
-            return_tensors='pt'
+        # 1. 규칙 기반 분류 (빠른 필터링)
+        rule_result = self.rule_classifier.predict(text, features)
+
+        # 빠른 판단: 규칙에서 매우 높은 확신도로 비정상이면 바로 반환
+        if not rule_result['is_normal'] and rule_result['confidence'] > 0.9:
+            return {
+                'is_normal': False,
+                'confidence': rule_result['confidence'],
+                'method': 'rule_based_fast',
+                'abnormal_factors': rule_result.get('abnormal_factors', []),
+                'text': text
+            }
+
+        # 2. 모델 기반 분류 (모델이 있는 경우만)
+        if self.model_classifier is not None:
+            try:
+                model_result = self.model_classifier.predict(text)
+            except Exception as e:
+                logger.warning(f"모델 예측 실패, 규칙 기반 결과만 사용합니다: {e}")
+                model_result = {'is_normal': rule_result['is_normal'], 'confidence': 0.5}
+        else:
+            # 모델이 없는 경우 기본값 사용
+            model_result = {'is_normal': rule_result['is_normal'], 'confidence': 0.5}
+
+        # 3. 문장 단위 분석
+        segment_result = self.segment_analyzer.analyze(text)
+
+        # 4. 앙상블 결정
+        # 가중치 조정 (모델이 없는 경우)
+        model_weight = self.model_weight if self.model_classifier is not None else 0.0
+        rule_weight = self.rule_weight if model_weight == 0.0 else self.rule_weight
+        segment_weight = self.segment_weight if model_weight == 0.0 else self.segment_weight
+
+        # 가중치 정규화
+        total_weight = model_weight + rule_weight + segment_weight
+        if total_weight > 0:
+            model_weight /= total_weight
+            rule_weight /= total_weight
+            segment_weight /= total_weight
+
+        # 각 분류기의 정상 확률 (0에 가까울수록 비정상, 1에 가까울수록 정상)
+        rule_normal_prob = rule_result['confidence'] if rule_result['is_normal'] else 1 - rule_result['confidence']
+        model_normal_prob = model_result['confidence'] if model_result['is_normal'] else 1 - model_result['confidence']
+        segment_normal_prob = 1 - segment_result['max_abnormal_score']  # 비정상 점수의 반대
+
+        # 가중 평균 계산
+        weighted_normal_prob = (
+                model_weight * model_normal_prob +
+                rule_weight * rule_normal_prob +
+                segment_weight * segment_normal_prob
         )
-        
-        # 텐서를 장치로 이동
-        input_ids = encoding['input_ids'].to(self.device)
-        attention_mask = encoding['attention_mask'].to(self.device)
-        token_type_ids = encoding['token_type_ids'].to(self.device)
-        
-        # 예측
-        with torch.no_grad():
-            # 로짓 계산
-            logits = self.model(input_ids, attention_mask, token_type_ids)
-            
-            # 확률 계산
-            probs = torch.softmax(logits, dim=1)
-            
-            # 클래스 및 확률 추출 (0: 정상, 1: 비정상)
-            normal_prob = probs[0, 0].item()
-            abnormal_prob = probs[0, 1].item()
-            
-            is_normal = normal_prob >= 0.5
-            confidence = normal_prob if is_normal else abnormal_prob
-        
+
+        # 최종 판정
+        is_normal = weighted_normal_prob >= self.threshold
+        confidence = weighted_normal_prob if is_normal else 1 - weighted_normal_prob
+
+        # 결과 생성
         return {
             'is_normal': is_normal,
             'confidence': confidence,
-            'method': 'model_based',
-            'normal_prob': normal_prob,
-            'abnormal_prob': abnormal_prob
+            'method': 'ensemble',
+            'abnormal_factors': _get_abnormal_factors(rule_result, segment_result),
+            'text': text,
+            'segment_results': segment_result['segment_results'],
+            'component_results': {
+                'rule': rule_result,
+                'model': model_result,
+                'segment': segment_result
+            }
         }
+
+
+def _get_abnormal_factors(rule_result, segment_result):
+    """비정상 요소 수집"""
+    abnormal_factors = []
+
+    # 규칙 기반에서 감지된 비정상 요소
+    if not rule_result['is_normal'] and 'abnormal_factors' in rule_result:
+        abnormal_factors.extend(rule_result['abnormal_factors'])
+
+    # 세그먼트 분석에서 감지된 비정상 요소
+    if segment_result['is_abnormal']:
+        for segment in segment_result['segment_results']:
+            if segment['is_abnormal']:
+                sentence_preview = segment['sentence'][:30] + '...' if len(segment['sentence']) > 30 else segment[
+                    'sentence']
+                abnormal_factors.append(f"비정상 문장 (점수: {segment['abnormal_score']:.2f}): '{sentence_preview}'")
+
+    return abnormal_factors
 
 def predict_text(text: str, time: Optional[str] = None, model_file: str = MODEL_PATH, detailed: bool = False) -> Dict:
     """
@@ -200,15 +250,32 @@ def predict_text(text: str, time: Optional[str] = None, model_file: str = MODEL_
     preprocessor = TextPreprocessor()
     feature_extractor = AdvancedFeatureExtractor()
     rule_classifier = RuleBasedClassifier(feature_extractor)
-    model_classifier = ModelClassifier(model_file)
+    
+    try:
+        # 모델 로드 시도 - 실패해도 계속 진행
+        model_classifier = ModelClassifier(model_file)
+    except Exception as e:
+        logger.warning(f"모델 로드 실패, 규칙 기반 분류만 사용합니다: {e}")
+        model_classifier = None
+    
     segment_analyzer = SegmentAnalyzer(preprocessor, feature_extractor)
     
-    # 앙상블 분류기 생성
-    ensemble = EnsembleClassifier(
-        model_classifier=model_classifier,
-        rule_classifier=rule_classifier,
-        segment_analyzer=segment_analyzer
-    )
+    # 앙상블 분류기 생성 (모델이 로드되지 않았으면 가중치 조정)
+    if model_classifier is None:
+        ensemble = EnsembleClassifier(
+            model_classifier=None,
+            rule_classifier=rule_classifier,
+            segment_analyzer=segment_analyzer,
+            model_weight=0.0,
+            rule_weight=0.7,
+            segment_weight=0.3
+        )
+    else:
+        ensemble = EnsembleClassifier(
+            model_classifier=model_classifier,
+            rule_classifier=rule_classifier,
+            segment_analyzer=segment_analyzer
+        )
     
     # 전처리
     preprocessed = preprocessor.preprocess(text)
@@ -271,14 +338,32 @@ def predict_batch(input_file: str, output_file: str, model_file: str = MODEL_PAT
     preprocessor = TextPreprocessor()
     feature_extractor = AdvancedFeatureExtractor()
     rule_classifier = RuleBasedClassifier(feature_extractor)
-    model_classifier = ModelClassifier(model_file)
+    
+    try:
+        # 모델 로드 시도 - 실패해도 계속 진행
+        model_classifier = ModelClassifier(model_file)
+    except Exception as e:
+        logger.warning(f"모델 로드 실패, 규칙 기반 분류만 사용합니다: {e}")
+        model_classifier = None
+    
     segment_analyzer = SegmentAnalyzer(preprocessor, feature_extractor)
     
-    ensemble = EnsembleClassifier(
-        model_classifier=model_classifier,
-        rule_classifier=rule_classifier,
-        segment_analyzer=segment_analyzer
-    )
+    # 앙상블 분류기 생성 (모델이 로드되지 않았으면 가중치 조정)
+    if model_classifier is None:
+        ensemble = EnsembleClassifier(
+            model_classifier=None,
+            rule_classifier=rule_classifier,
+            segment_analyzer=segment_analyzer,
+            model_weight=0.0,
+            rule_weight=0.7,
+            segment_weight=0.3
+        )
+    else:
+        ensemble = EnsembleClassifier(
+            model_classifier=model_classifier,
+            rule_classifier=rule_classifier,
+            segment_analyzer=segment_analyzer
+        )
     
     # 각 행 처리
     total = len(df)

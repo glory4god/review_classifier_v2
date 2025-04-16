@@ -26,18 +26,33 @@ class ReviewDataset(Dataset):
     """
     리뷰 데이터셋 클래스
     """
-    def __init__(self, texts: List[str], labels: List[int], tokenizer: ElectraTokenizer, max_length: int = 128):
+
+    def __init__(self, model_name: str = TRAIN_CONFIG['model_name'], num_classes: int = 2,
+                 dropout_rate: float = TRAIN_CONFIG['dropout_rate']):
         """
         Args:
-            texts: 리뷰 텍스트 리스트
-            labels: 라벨 리스트 (0: 정상, 1: 비정상)
-            tokenizer: ELECTRA 토크나이저
-            max_length: 최대 시퀀스 길이
+            model_name: 사전학습 모델 이름 (예: 'monologg/koelectra-base-v3-discriminator')
+            num_classes: 클래스 수
+            dropout_rate: 드롭아웃 비율
         """
-        self.texts = texts
-        self.labels = labels
-        self.tokenizer = tokenizer
-        self.max_length = max_length
+        super(ReviewClassifierPro, self).__init__()
+        # config만 불러오고 직접 모델을 로드하지 않음
+        self.config = ElectraConfig.from_pretrained(model_name)
+
+        # 직접 config로부터 모델 초기화
+        self.electra = ElectraModel(self.config)
+
+        # 나머지 레이어 초기화
+        self.dropout = nn.Dropout(dropout_rate)
+        self.classifier = nn.Sequential(
+            nn.Linear(self.config.hidden_size, 512),
+            nn.ReLU(),
+            nn.Dropout(dropout_rate),
+            nn.Linear(512, num_classes)
+        )
+
+        # L2 정규화 강도
+        self.l2_reg = TRAIN_CONFIG.get('l2_reg', 0.01)
         
     def __len__(self):
         return len(self.texts)
